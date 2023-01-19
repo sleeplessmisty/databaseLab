@@ -2,7 +2,9 @@
 
 This repository contains the lab done for the course D0018E.
 
-For this lab, a relational database for an e-commerce website will be established. The website will contain, to the minimum, the following:
+For this lab, a relational database for an e-commerce website will be established. An e-commerce website is where customers can purchase products online. 
+
+The website will contain, to the minimum, the following:
 
 - List (or such) of products avaliable for customers to purchase
 - Option to add/remove products to a shopping cart
