@@ -1,8 +1,6 @@
 <?php 
 session_start();
-
-// connect to database
-$db = mysqli_connect('localhost', 'root', 'password123', 'd0018e_db');
+include('/var/www/d0018e_js/php/f_login.php');
 
 // variable declaration
 $username = "";
@@ -69,6 +67,13 @@ $res_email_db = mysqli_query($db, $q_email_db);
 		//	$_SESSION['success']  = "New customer successfully created!!";
 		//	header('location: home.php');
 
+			//get customer id when logged in and send to create cart
+			$query_c_id = "SELECT id FROM customer WHERE username='$username' LIMIT 1";
+			$res_c_id = mysqli_query($db, $query_c_id);
+			$c_id = mysqli_fetch_array($res_c_id);
+			$_SESSION['customerId'] = intval($c_id[0]);
+			createCart($c_id[0]);
+
 			// get id of the created user
 			$logged_in_user_id = mysqli_insert_id($db);
 
@@ -76,42 +81,5 @@ $res_email_db = mysqli_query($db, $q_email_db);
 			$_SESSION['success']  = "New customer successfully created. You are now logged in";
 			header("location: shop.php");
 			exit();	
-	}
-}
-
-// return user array from their id
-function getUserById($id){
-	global $db;
-	$query = "SELECT * FROM customer WHERE id=" . $id;
-	$result = mysqli_query($db, $query);
-
-	$user = mysqli_fetch_assoc($result);
-	return $user;
-}
-
-// escape string
-function e($val){
-	global $db;
-	return mysqli_real_escape_string($db, trim($val));
-}
-
-function display_error() {
-	global $errors;
-
-	if (count($errors) > 0){
-		echo '<div class="error">';
-			foreach ($errors as $error){
-				echo $error .'<br>';
-			}
-		echo '</div>';
-	}
-}	
-
-function isLoggedIn()
-{
-	if (isset($_SESSION['user'])) {
-		return true;
-	}else{
-		return false;
 	}
 }
