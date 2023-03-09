@@ -83,3 +83,9 @@
 .justify-content-center {
     justify-content: center;
 }
+
+.input {
+  margin: 0;
+  font-family: 10px;
+  line-height: inherit;
+}

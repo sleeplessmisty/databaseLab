@@ -1,0 +1,12 @@
+.imgUrl {
+    float: center;
+    width:  250px;
+    height: 250px;
+    object-fit: auto;
+}
+
+.modalButton{
+    padding: 0;
+    border: none;
+    background: none;
+}

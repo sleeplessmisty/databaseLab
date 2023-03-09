@@ -1,0 +1,13 @@
+.left_list {
+    width:50%;
+    float:left
+}
+
+.right_list {
+    margin-left:50%
+}
+
+.container-list {
+    padding-top: 1rem !important;
+    padding-bottom: none !important;
+}

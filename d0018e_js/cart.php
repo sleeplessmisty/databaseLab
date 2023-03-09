@@ -40,10 +40,14 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <?php if(isLoggedIn()) : ?>
                                 <!-- <li><a class="dropdown-item" href="index.php">Logout</a></li> -->
+                                <div>
+                                <li><a class="dropdown-item" href="accountinfo.php">Account Information</a></li>
+                                <li><a class="dropdown-item" href="orderhistory.php">Order History</a></li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <form method="post" action="index.php">
                                 <button type="submit" class="button" name="logout_btn" value="<?php echo $logout_btn; ?>">Logout</button>
 					            </form>
-                                <li><a class="dropdown-item" href="accountinfo.php">Account Information</a></li>
+                                </div>
                             <?php else : ?>
                                 <li><a class="dropdown-item" href="login.php">Login</a></li>
                                 <li><a class="dropdown-item" href="registercustomer.php">Register</a></li>
@@ -75,67 +79,92 @@
 
         <!-- Section CART ITEMS -->
         <section class="py-5">
-        <div class="container">
-            <h1>Shopping Cart</h1>
-        <?php
-        
-        $query = "SELECT * FROM cartitem WHERE cartid = '$cart_id' ";
+            <div class="container">
+                <h1>Shopping Cart</h1>
+                <!--?php echo $_SESSION['carterror'] ?-->
+            <?php
 
-// Execute the query
-$result = mysqli_query($db, $query);
+            if (isset($_SESSION['carterror'])) {
+                echo "<div class='error-message text-danger'>" . $_SESSION['carterror'] . "</div>";
+                unset($_SESSION['carterror']);
+            }
+            
+            $query = "SELECT * FROM cartitem WHERE cartid = '$cart_id' ";
 
-// Loop through the results and display the products
-while ($row = mysqli_fetch_array($result)) {
-    $product_id = $row['productid'];
-    $product_quantity = $row['quantity'];
-    // Execute the query
-    $query_2 = "SELECT * FROM product WHERE id = '$product_id;' ";
-    $result_2 = mysqli_query($db, $query_2);
-    $row2 = mysqli_fetch_array($result_2);
-    // Get the product information from the current row
-    $product_name = $row2['name'];
-    $product_price = $row2['price'];
-    $itemtotal_price = $row2['price'] * $row['quantity'];
-    $product_size = $row2['size'];
-    $product_color = $row2['color'];
-    
-    // Display the product information in the given HTML format
-    ?>
-    <section class="py-5">
-        <div class="container-cart">
-            <!--h1>Shopping Cart</h1-->
-            <div class="cart">
-                <div class="product">
-                    <img class="card-img-top" src=<?php echo $row2["imgurl"]; ?> alt="...">
-                    <div class="product-info">
-                        <h5 class="product-name">Product: <?php echo $product_name ?></h5>
-                        <h6 class="product-price">Price: <?php echo $itemtotal_price ?> SEK</h6>
-                        <h6 class="product-size">Size: <?php echo $product_size ?></h6>
-                        <h6 class="product-color">Color: <?php echo $product_color ?></h6>
-                        <!--p class="product-quantity">Qnt: <!--?php echo $product_quantity ?></h6-->
-                        <form method="post" action="shop.php">
-                    <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-                    <div class="form-group">
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" value="<?php echo $product_quantity ?>" min="1">
-                    <div class="d-flex justify-content-center">
-                    <button type="submit" class="button" name="updatecart_btn" value="<?php echo $product_id; ?>">Update Cart</button>
+            // Execute the query
+            $result = mysqli_query($db, $query);
+
+            // Loop through the results and display the products
+            while ($row = mysqli_fetch_array($result)) {
+                $product_id = $row['productid'];
+                $product_quantity = $row['quantity'];
+                // Execute the query
+                $query_2 = "SELECT * FROM product WHERE id = '$product_id;' ";
+                $result_2 = mysqli_query($db, $query_2);
+                $row2 = mysqli_fetch_array($result_2);
+                // Get the product information from the current row
+                $product_name = $row2['name'];
+                $product_price = $row2['price'];
+                $itemtotal_price = $row2['price'] * $row['quantity'];
+                $product_size = $row2['size'];
+                $product_color = $row2['color'];
+                $active = $row2['active'];
+                
+                // Display the product information in the given HTML format
+                ?>
+                <section class="py-5">
+                    <div class="container-cart">
+                        <!--h1>Shopping Cart</h1-->
+                        <div class="cart">
+                            <div class="product">
+                                <img class="card-img-top" src=<?php echo $row2["imgurl"]; ?> alt="...">
+                                <div class="product-info">
+                                <?php if(($active == 1) AND $product_quantity != 0) : ?>
+                                    <h5 class="product-name">Product: <?php echo $product_name ?></h5>
+                                    <h6 class="product-price">Price: <?php echo $itemtotal_price ?> SEK</h6>
+                                    <h6 class="product-size">Size: <?php echo $product_size ?></h6>
+                                    <h6 class="product-color">Color: <?php echo $product_color ?></h6>
+                                    <!--p class="product-quantity">Qnt: <!--?php echo $product_quantity ?></h6-->
+                                    <form method="post" action="shop.php">
+                                        <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                        <div class="form-group">
+                                            <label for="quantity">Quantity:</label>
+                                            <input type="number" id="quantity" name="quantity" value="<?php echo $product_quantity ?>" min="1" max="<?php echo $row2['quantity']; ?>">
+                                            <div class="d-flex justify-content-center">
+                                                <button type="submit" class="button" name="updatecart_btn" value="<?php echo $product_id; ?>">Update Cart</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <?php elseif (($active == 1) AND $product_quantity == 0) : ?>
+                                    <h5 class="product-name">Product: <?php echo $product_name ?></h5>
+                                    <h6 class="product-quantity">Quantity: <?php echo $product_quantity ?></h5>
+                                    <?php 
+                                        echo "<p class='text-danger'>Product went out of stock. Please remove from cart </p>";
+                                    ?>
+                                    <?php else : ?>
+                                        <h5 class="product-name">Product: <?php echo $product_name ?></h5>
+                                    <?php 
+                                        echo "<p class='text-danger'>Product not active in store any more. Please remove from cart </p>";
+                                    ?>
+                                    <?php endif; ?>
+                            <form method="post" action="shop.php">
+                                <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                <button type="submit" class="product-remove" name="removeproduct_btn" value="<?php echo $product_id; ?>">Remove from Cart</button>
+                            </form>
+                            </div>
                     </div>
-                </form>
-                <form method="post" action="shop.php">
-                    <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-                    <button type="submit" class="product-remove" name="removeproduct_btn" value="<?php echo $product_id; ?>">Remove from Cart</button>
-                </form>
-                </div>
+                </section>
+                <?php 
+                }
+            ?>            </div>
+            </div>
+        </section>
+        <div class="container"><h3>Cart Total: <?php echo $totalSumCart ?> SEK</h3></div>
+            <div class="container"><form action="billing.php">
+                <h5><button class="button" href="billing.php">Next</button></h5>
+            </div>
+        </form>
         </div>
-    </section>
-    <?php 
-    }
-?>            </div>
-</div>
-    </section>
-<div class="container"><h3>Cart Total: <?php echo $totalSumCart ?> SEK</h3></div>
-</div>
         <!-- Footer -->
         <footer class="py-5 bg-dark">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Muggle | Lab in course D0018E @ LTU 2023</p></div>

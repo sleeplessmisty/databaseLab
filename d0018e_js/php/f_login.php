@@ -46,8 +46,13 @@ function c_login(){
 	if (count($errors) == 0) {
 		$password = md5($password);
 
-		$query_c = "SELECT * FROM customer WHERE username='$username' AND password='$password' LIMIT 1";
-		$results_c = mysqli_query($db, $query_c);
+		//$query_c = "SELECT * FROM customer WHERE username='$username' AND password='$password' LIMIT 1";
+		//$results_c = mysqli_query($db, $query_c);
+		$query_c = "SELECT * FROM customer WHERE username=? AND password=? LIMIT 1";
+		$stmt = mysqli_prepare($db, $query_c);
+		mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+		mysqli_stmt_execute($stmt);
+		$results_c = mysqli_stmt_get_result($stmt);
 
 		if (mysqli_num_rows($results_c) == 1) { // customer found
 			$logged_in_user = mysqli_fetch_assoc($results_c);
@@ -56,8 +61,14 @@ function c_login(){
 			$_SESSION['success']  = "You are now logged in";
 
 			//get customer id when logged in and send to create cart
-			$query_c_id = "SELECT id FROM customer WHERE username='$username' LIMIT 1";
+			/*$query_c_id = "SELECT id FROM customer WHERE username='$username' LIMIT 1";
 			$res_c_id = mysqli_query($db, $query_c_id);
+			$c_id = mysqli_fetch_array($res_c_id);
+			$_SESSION['customerId'] = intval($c_id[0]);*/
+			$stmt = mysqli_prepare($db, "SELECT id FROM customer WHERE username = ? LIMIT 1");
+			mysqli_stmt_bind_param($stmt, "s", $username);
+			mysqli_stmt_execute($stmt);
+			$res_c_id = mysqli_stmt_get_result($stmt);
 			$c_id = mysqli_fetch_array($res_c_id);
 			$_SESSION['customerId'] = intval($c_id[0]);
 			createCart($c_id[0]);
@@ -91,16 +102,27 @@ function c_login(){
 		if (count($errors) == 0) {
 			$password = md5($password);
 	
-			$query_a = "SELECT * FROM admin WHERE username='$username' AND password='$password' LIMIT 1";
-			$results_a = mysqli_query($db, $query_a);
+			//$query_a = "SELECT * FROM admin WHERE username='$username' AND password='$password' LIMIT 1";
+			//$results_a = mysqli_query($db, $query_a);
+			$stmt = mysqli_prepare($db, "SELECT * FROM admin WHERE username = ? AND password = ? LIMIT 1");
+			mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+			mysqli_stmt_execute($stmt);
+			$results_a = mysqli_stmt_get_result($stmt);
 	
 			if(mysqli_num_rows($results_a) == 1){ // admin found
 				$logged_in_user = mysqli_fetch_assoc($results_a);
-				$_SESSION['user'] = $logged_in_user;
+				$_SESSION['user'] = 'customer';
 				$_SESSION['userType'] = 'admin';
 				$_SESSION['success']  = "You are now logged in";
-					header('location: admin.php');
-					exit();
+
+				$stmt = mysqli_prepare($db, "SELECT id FROM admin WHERE username = ? LIMIT 1");
+				mysqli_stmt_bind_param($stmt, "s", $username);
+				mysqli_stmt_execute($stmt);
+				$res_a_id = mysqli_stmt_get_result($stmt);
+				$a_id = mysqli_fetch_array($res_a_id);
+				$_SESSION['admin_id'] = intval($a_id[0]);
+				header('location: admin.php');
+				exit();
 			}else {
 				array_push($errors, "Wrong username/password combination");
 			}
@@ -165,7 +187,7 @@ function display_error() {
 
 function isLoggedIn()
 {
-	if (isset($_SESSION['user'])) {
+	if (isset($_SESSION['userType'])) {
 		return true;
 	}else{
 		return false;

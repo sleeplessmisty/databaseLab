@@ -1,7 +1,6 @@
-
 <?php 
 session_start();
-include('/var/www/d0018e_js/php/f_login.php');
+include('/var/www/d0018e_js/php/f_review.php');
 
 // variable declaration
 $name = "";
@@ -78,7 +77,10 @@ if ($_POST['action'] == 'edit' && $_POST['id']) {
 		$updateField.= "imgurl='".$_POST['imgurl']."'";
 	}if(isset($_POST['quantity'])) {
 		$updateField.= "quantity='".$_POST['quantity']."'";
+	}if(isset($_POST['active'])) {
+		$updateField.= "active='".$_POST['active']."'";
 	}
+	
 	if($updateField && $_POST['id']) {
 		$sqlQuery = "UPDATE product SET $updateField WHERE id ='" . $_POST['id'] . "'";	
 		mysqli_query($db, $sqlQuery) or die("database error:". mysqli_error($db));	
@@ -89,6 +91,17 @@ if ($_POST['action'] == 'edit' && $_POST['id']) {
 		echo json_encode($data);		
 	}
 }
+/*if ($_POST['action'] == 'delete' && $_POST['id']) {
+	$sqlQuery = "UPDATE product SET active = '0' WHERE id='" . $_POST['id'] . "'";	
+	header("Refresh:0");
+	mysqli_query($db, $sqlQuery) or die("database error:". mysqli_error($db));	
+	$data = array(
+		"message"	=> "Record Deleted",	
+		"status" => 1
+
+	);
+	echo json_encode($data);	
+}*/
 if ($_POST['action'] == 'delete' && $_POST['id']) {
 	$sqlQuery = "DELETE FROM product WHERE id='" . $_POST['id'] . "'";	
 	header("Refresh:0");
@@ -99,4 +112,11 @@ if ($_POST['action'] == 'delete' && $_POST['id']) {
 
 	);
 	echo json_encode($data);	
+}
+
+if (isset($_POST['product_pressed'])) {
+	$product_id = $_POST['product_pressed'];
+	$_SESSION['currentproduct']  = $product_id;
+	header("location: productinfo.php");
+	exit();	
 }

@@ -53,46 +53,16 @@ $res_username_db = mysqli_query($db, $q_username_db);
 					  VALUES('$username', '$password')";
 			mysqli_query($db, $query);
 
+			$stmt = mysqli_prepare($db, "SELECT id FROM admin WHERE username = ? LIMIT 1");
+			mysqli_stmt_bind_param($stmt, "s", $username);
+			mysqli_stmt_execute($stmt);
+			$res_a_id = mysqli_stmt_get_result($stmt);
+			$a_id = mysqli_fetch_array($res_a_id);
+			$_SESSION['admin_id'] = intval($a_id[0]);
+
 			//$_SESSION['user'] = getUserById($logged_in_user_id); // put logged in user in session
 			$_SESSION['success']  = "New Admin successfully created!";
 			header("location: admin.php");
 			exit();	
-	}
-}
-
-// return user array from their id
-function getUserById($id){
-	global $db;
-	$query = "SELECT * FROM customer WHERE id=" . $id;
-	$result = mysqli_query($db, $query);
-
-	$user = mysqli_fetch_assoc($result);
-	return $user;
-}
-
-// escape string
-function e($val){
-	global $db;
-	return mysqli_real_escape_string($db, trim($val));
-}
-
-function display_error() {
-	global $errors;
-
-	if (count($errors) > 0){
-		echo '<div class="error">';
-			foreach ($errors as $error){
-				echo $error .'<br>';
-			}
-		echo '</div>';
-	}
-}	
-
-function isLoggedIn()
-{
-	if (isset($_SESSION['user'])) {
-		return true;
-	}else{
-		return false;
 	}
 }

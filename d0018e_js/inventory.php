@@ -42,10 +42,10 @@ if (isset($_GET['logout'])) {
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <?php if(isLoggedIn()) : ?>
                                 <!-- Change here -->
-                                <li><a class="dropdown-item" href="admin.php">Logout</a></li>
-                                <li><a class="dropdown-item" href="admin.php">Change password</a></li>
-                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="admin.php">change password</a></li>
                                 <li><a class="dropdown-item" href="admin.php">Create admin</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="admin.php">Logout</a></li>
                                 <?php else : ?>
                                 <li><a class="dropdown-item" href="admin.php">Login</a></li>
                                 <?php endif; ?>

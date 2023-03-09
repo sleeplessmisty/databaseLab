@@ -50,10 +50,12 @@ if (isset($_GET['logout'])) {
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <?php if(isLoggedIn()) : ?>
                                 <!-- Change here -->
-                                <li><a class="dropdown-item" href="admin.php">Logout</a></li>
-                                <li><a class="dropdown-item" href="admin.php">Account Information</a></li>
-                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="adminaccountinfo.php">Account Information</a></li>
                                 <li><a class="dropdown-item" href="admin.php">Back to Adminpage</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <form method="post" action="index.php">
+                                <button type="submit" class="button" name="logout_btn" value="<?php echo $logout_btn; ?>">Logout</button>
+                                </form>
                                 <?php else : ?>
                                 <li><a class="dropdown-item" href="adminlogin.php">Login</a></li>
                                 <?php endif; ?>
@@ -66,7 +68,7 @@ if (isset($_GET['logout'])) {
                                 <li><a class="dropdown-item" href="products.php">View/Alter Products</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="admin.php">Order history</a></li> 
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="adminorderhistory.php">Order history</a></li> 
                     </ul>
                     
                 </div>
@@ -85,7 +87,8 @@ if (isset($_GET['logout'])) {
         <section class="py-5">
         <script type="text/javascript" src="js/jquery.tabledit.js"></script>
         <div class="container home">	
-            <h2>Edit inventory</h2>		 
+            <h2>Edit inventory</h2>		
+            <h5>To remove/add product from store, set "active" as 0 or 1. </h5>	 
             <div class="table-responsive">
             <table id="data_table" class="table table-striped">
                 <thead>
@@ -97,11 +100,12 @@ if (isset($_GET['logout'])) {
                     <th>Color</th>
                     <th>Quantity</th>	
                     <th>Image URL</th>
+                    <th>Active</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php 
-                    $sql_query = "SELECT id, name, price, size, color, imgurl, quantity FROM product LIMIT 10";
+                    $sql_query = "SELECT id, name, price, size, color, imgurl, quantity, active FROM product";
                     $resultset = mysqli_query($db, $sql_query) or die("database error:". mysqli_error($db));
                     while( $product = mysqli_fetch_assoc($resultset) ) {
                     ?>
@@ -113,6 +117,7 @@ if (isset($_GET['logout'])) {
                         <td><?php echo $product ['color']; ?></td>
                         <td><?php echo $product ['quantity']; ?></td>
                         <td><?php echo $product ['imgurl']; ?></td>
+                        <td><?php echo $product ['active']; ?></td>
                     <?php } ?>
                 </tbody>
             </table>	
@@ -137,6 +142,6 @@ if (isset($_GET['logout'])) {
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
+        <!--script src="js/scripts.js"></script-->
     </body>
 </html>

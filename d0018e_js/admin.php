@@ -45,12 +45,12 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <?php if(isLoggedIn()) : ?>
                                 <!-- Change here -->
+                                <li><a class="dropdown-item" href="adminaccountinfo.php">Account information</a></li>
+                                <li><a class="dropdown-item" href="createadmin.php">Create admin</a></li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <form method="post" action="index.php">
                                 <button type="submit" class="button" name="logout_btn" value="<?php echo $logout_btn; ?>">Logout</button>
                                 </form>
-                                <li><a class="dropdown-item" href="adminaccountinfo.php">Account information</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="createadmin.php">Create admin</a></li>
                                 <?php else : ?>
                                 <li><a class="dropdown-item" href="adminlogin.php">Login</a></li>
                                 <?php endif; ?>
@@ -63,7 +63,7 @@
                                 <li><a class="dropdown-item" href="products.php">View/Alter Products</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="admin.php">Order history</a></li> 
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="adminorderhistory.php">Order history</a></li> 
                     </ul>
                     
                 </div>
@@ -90,8 +90,9 @@
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center gap-sm-3">
             <?php
-            $res = mysqli_query($db, "select * from product");
+            $res = mysqli_query($db, "SELECT * FROM product");
             while ($row = mysqli_fetch_array($res)) {
+                $active = $row["active"];
             ?>
                 <div class="col sm-4">
                     <div class="card h-100">
@@ -104,6 +105,10 @@
                                 <!-- Product name-->
                                 <h5 class="fw-bolder"><?php echo $row["name"]; ?> </h5>
                                 <h2><?php echo $row["price"]; ?> SEK</h2>
+                                <?php if($active == 0) : 
+                                 echo "<p class='text-danger'>Product not active in store </p>";
+                                 ?>
+                                 <?php endif; ?>
                             </div>
                         </div>
                         <!-- Product actions-->

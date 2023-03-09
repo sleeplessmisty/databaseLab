@@ -57,7 +57,7 @@
                     </div>
                 <div class="form-group">
                 <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" value="<?php echo $password; ?>">
+                <input class="form-control" type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" value="<?php echo $password; ?>">
              </div>
             <div class="checkbox">
             </div>
