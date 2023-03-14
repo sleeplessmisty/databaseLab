@@ -188,3 +188,4 @@ function setPriceCartitem($cart_id) {
         $result = mysqli_query($db, $query_update);
     }
 }
+

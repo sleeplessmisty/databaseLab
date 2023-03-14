@@ -101,6 +101,7 @@ if (isset($_GET['logout'])) {
                     $billing_id = $row['billingid'];
                     $cart_id = $row['cartid'];
                     $totalSumOrder = $row['totalsum'];
+                    $status = $row['status'];
                     ?>
                     <div class="left_list">
                         <div class="container-checkout">
@@ -110,7 +111,8 @@ if (isset($_GET['logout'])) {
                                     <h6>Billing ID: <?php echo $billing_id ?></h6>
                                     <h6>Cart ID: <?php echo $cart_id ?></h6>
                                     <h6>Customer ID: <?php echo $customer_id ?></h6>
-                                    <h6>Total Sum: <?php echo $totalSumOrder ?> SEK</h6>                                
+                                    <h6>Total Sum: <?php echo $totalSumOrder ?> SEK</h6> 
+                                    <h6>Status: <?php echo $status ?></h6>                                 
                                 </div>
                             </div>
                             <form method="post" action="adminorderhistory.php">
